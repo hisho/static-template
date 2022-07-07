@@ -4,8 +4,12 @@
   "description": "静的サイトテンプレート",
   "private": true,
   "scripts": {
-    "dev": "minista",
-    "build": "minista build",
+    "dev": "NODE_ENV=development run-p dev:*",
+    "dev:minista": "minista",
+    "dev:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida --watch",
+    "build": "NODE_ENV=production run-s build:path build:minista",
+    "build:minista": "minista build",
+    "build:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida",
     "preview": "minista preview",
     "format": "prettier --check . --write"
   },
@@ -26,10 +30,14 @@
     "@types/react": "^17.0.45",
     "@types/react-dom": "^17.0.16",
     "minista": "^2.8.2",
+    "next": "^12.2.0",
+    "npm-run-all": "^4.1.5",
+    "pathpida": "^0.18.1",
     "prettier": "^2.7.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vite-plugin-environment": "^1.1.1"
   },
   "license": "MIT",
   "volta": {
