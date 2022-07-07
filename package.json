@@ -1,0 +1,14 @@
+{
+  "name": "static-template",
+  "version": "1.0.0",
+  "description": "静的サイトテンプレート",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "volta": {
+    "node": "16.15.1",
+    "npm": "8.13.2"
+  }
+}
