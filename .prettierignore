@@ -3,3 +3,4 @@ dist
 package.json
 package-lock.json
 node_modules
+src/lib/pathpida
