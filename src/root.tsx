@@ -1,5 +1,7 @@
 import type { MinistaLocation } from "minista"
 import { ReactNode } from "react"
+import "@src/styles/common.scss"
+import "@src/styles/tailwind.css"
 
 type RootProps = {
   location: MinistaLocation

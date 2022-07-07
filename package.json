@@ -29,6 +29,7 @@
     "@types/prettier": "^2.6.3",
     "@types/react": "^17.0.45",
     "@types/react-dom": "^17.0.16",
+    "autoprefixer": "^10.4.7",
     "minista": "^2.8.2",
     "next": "^12.2.0",
     "npm-run-all": "^4.1.5",
@@ -36,6 +37,8 @@
     "prettier": "^2.7.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "sass": "^1.53.0",
+    "tailwindcss": "^3.1.4",
     "typescript": "^4.7.4",
     "vite-plugin-environment": "^1.1.1"
   },

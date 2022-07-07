@@ -9,7 +9,7 @@ const config = () => {
       alias: [{ find: "@src/", replacement: resolve("src") + "/" }],
     },
     assets: {
-      entry: ["src/scripts/main.ts"],
+      entry: ["src/scripts/main.ts", "src/styles/tailwind.css"],
     },
     vite: {
       plugins: [
