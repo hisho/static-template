@@ -8,6 +8,9 @@ const config = () => {
     resolve: {
       alias: [{ find: "@src/", replacement: resolve("src") + "/" }],
     },
+    assets: {
+      entry: ["src/scripts/main.ts"],
+    },
     vite: {
       plugins: [
         EnvironmentPlugin({
