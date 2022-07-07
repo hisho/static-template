@@ -3,13 +3,19 @@ import { resolve } from "path"
 import EnvironmentPlugin from "vite-plugin-environment"
 
 const config = () => {
-  console.log(process.env["NODE_ENV"])
   return defineConfig({
     resolve: {
       alias: [{ find: "@src/", replacement: resolve("src") + "/" }],
     },
     assets: {
-      entry: ["src/scripts/main.ts", "src/styles/tailwind.css"],
+      entry: [
+        "src/scripts/main.ts",
+        "src/styles/common.scss",
+        "src/styles/tailwind.css",
+      ],
+      bundle: {
+        outName: "[name]",
+      },
     },
     vite: {
       plugins: [
