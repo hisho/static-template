@@ -11,7 +11,9 @@
     "build:minista": "minista build",
     "build:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida",
     "preview": "minista preview",
-    "format": "prettier --check . --write"
+    "format": "prettier --check . --write",
+    "watch:image": "ts-node --project tsconfig-node.json images.ts --watch",
+    "build:image": "ts-node --project tsconfig-node.json images.ts"
   },
   "prettier": {
     "semi": false
@@ -25,11 +27,16 @@
     "last 1 ChromeAndroid versions"
   ],
   "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/minimist": "^1.2.2",
     "@types/node": "^18.0.3",
     "@types/prettier": "^2.6.3",
     "@types/react": "^17.0.45",
     "@types/react-dom": "^17.0.16",
     "autoprefixer": "^10.4.7",
+    "chokidar": "^3.5.3",
+    "glop": "^0.3.1",
+    "minimist": "^1.2.6",
     "minista": "^2.8.2",
     "next": "^12.2.0",
     "npm-run-all": "^4.1.5",
@@ -39,6 +46,7 @@
     "react-dom": "^17.0.2",
     "sass": "^1.53.0",
     "tailwindcss": "^3.1.4",
+    "ts-node": "^10.8.2",
     "typescript": "^4.7.4",
     "vite-plugin-environment": "^1.1.1"
   },
