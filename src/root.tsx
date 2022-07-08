@@ -1,5 +1,6 @@
 import type { MinistaLocation } from "minista"
 import { ReactNode } from "react"
+import { Head } from "minista"
 
 type RootProps = {
   location: MinistaLocation
@@ -13,7 +14,14 @@ type RootProps = {
  */
 const Root = ({ location, children }: RootProps) => {
   console.log(location)
-  return <>{children}</>
+  return (
+    <>
+      <Head>
+        <link rel="icon" href="/favicon/favicon.png" />
+      </Head>
+      {children}
+    </>
+  )
 }
 
 export default Root
