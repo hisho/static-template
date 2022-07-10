@@ -3,23 +3,10 @@ import chokidar from "chokidar"
 import path from "path"
 import glob from "glob"
 import fs from "fs"
-import util from "util"
+import sharp from "sharp"
 
 const src = "src/images/"
 const dest = "public/images/"
-
-const copyFilePromise = util.promisify(fs.copyFile)
-const copyFiles: (
-  srcDir: string,
-  destDir: string,
-  fileNames: string[]
-) => Promise<Awaited<unknown>[]> = (srcDir, destDir, fileNames) => {
-  return Promise.all(
-    fileNames.map((fineName) => {
-      return copyFilePromise(srcDir, path.join(destDir, fineName))
-    })
-  )
-}
 
 const write = async (currentPath: string) => {
   const fileName = path.basename(currentPath)
@@ -37,8 +24,17 @@ const write = async (currentPath: string) => {
     fs.mkdirSync(destPath, { recursive: true })
   }
 
+  const sharpStream = sharp(currentPath)
+
   try {
-    await copyFiles(currentPath, destPath, [fileName, `${fileName}.webp`])
+    await Promise.all([
+      sharpStream[path.extname(fileName) === ".png" ? "png" : "jpeg"]({
+        quality: 90,
+      }).toFile(path.join(destPath, fileName)),
+      sharpStream
+        .webp({ quality: 80 })
+        .toFile(path.join(destPath, `${fileName}.webp`)),
+    ])
   } catch (e) {
     console.log(e)
   }
