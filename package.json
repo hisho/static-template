@@ -5,12 +5,13 @@
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=development run-p dev:*",
-    "dev:minista": "minista",
+    "dev:minista": "minista --host --open",
     "dev:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida --watch",
     "build": "NODE_ENV=production run-s build:path build:minista",
     "build:minista": "minista build",
     "build:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida",
-    "preview": "minista preview",
+    "serve": "run-s build preview",
+    "preview": "minista preview --host --open",
     "format": "prettier --check . --write",
     "watch:image": "ts-node --project tsconfig-node.json images.ts --watch",
     "build:image": "ts-node --project tsconfig-node.json images.ts"
