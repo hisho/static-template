@@ -31,15 +31,31 @@ const getImagePath = () => {
 }
 
 const createImageMetaData = () => {
-  const imageMapping = getImagePath().map((n) => {
-    const imagePath = path.join(src, n)
+  const imageMapping = getImagePath().map((currentPath) => {
+    const { dir, name, ext } = path.parse(currentPath)
+    const imagePath = path.join(src, currentPath)
     const { width, height } = sizeOf(imagePath)
     return {
       width,
       height,
+      original: path.join("/images/", currentPath),
       paths: {
-        root: path.join("/images/", n),
-        webp: path.join("/images/", `${n}.webp`),
+        path: Object.fromEntries(
+          options.deviceSizes.map((deviceSize) => {
+            return [
+              deviceSize,
+              path.join("/images/", dir, `${name}-w${deviceSize}${ext}`),
+            ]
+          })
+        ),
+        webp: Object.fromEntries(
+          options.deviceSizes.map((deviceSize) => {
+            return [
+              deviceSize,
+              path.join("/images/", dir, `${name}-w${deviceSize}${ext}.webp`),
+            ]
+          })
+        ),
       },
     }
   })
