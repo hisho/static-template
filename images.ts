@@ -22,23 +22,25 @@ const options = {
   },
 }
 
+const getImagePath = () => {
+  return glob.sync(`**/*.+(png|jpg)`, {
+    cwd: path.resolve(process.cwd(), src),
+  })
+}
+
 const createImageMetaData = () => {
-  const imageMapping = glob
-    .sync(`**/*.+(png|jpg)`, {
-      cwd: path.resolve(process.cwd(), src),
-    })
-    .map((n) => {
-      const imagePath = path.join(src, n)
-      const { width, height } = sizeOf(imagePath)
-      return {
-        width,
-        height,
-        paths: {
-          root: path.join("/images/", n),
-          webp: path.join("/images/", `${n}.webp`),
-        },
-      }
-    })
+  const imageMapping = getImagePath().map((n) => {
+    const imagePath = path.join(src, n)
+    const { width, height } = sizeOf(imagePath)
+    return {
+      width,
+      height,
+      paths: {
+        root: path.join("/images/", n),
+        webp: path.join("/images/", `${n}.webp`),
+      },
+    }
+  })
 
   fs.writeFile(
     `src/lib/$images.ts`,
@@ -79,7 +81,7 @@ const write = async (currentPath: string) => {
         .toFile(path.join(destPath, `${fileName}.webp`)),
     ])
   } catch (e) {
-    console.log(e)
+    console.log(`error! ${currentPath}`)
   }
 }
 
@@ -105,20 +107,10 @@ const main = async () => {
         createImageMetaData()
       })
   } else {
-    /**
-     * globでファイルを取得するしsrcのpathを連結する
-     * chokidarのpathと同じ形に整形した配列
-     * ['src/iamges/hoge.png', 'src/images/fuga.png']
-     */
-    const paths = glob
-      .sync(`**/*.+(png|jpg)`, {
-        cwd: path.resolve(process.cwd(), src),
-      })
-      .map((n) => path.join(src, n))
-
-    paths.forEach((path) => {
-      console.log("Building...", path)
-      write(path)
+    getImagePath().forEach((imagePath) => {
+      const imagePathWithSrc = path.join(src, imagePath)
+      console.log("Building...", imagePathWithSrc)
+      write(imagePathWithSrc)
     })
     createImageMetaData()
   }
