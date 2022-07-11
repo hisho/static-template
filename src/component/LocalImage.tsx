@@ -13,17 +13,23 @@ export const LocalImage = ({ src }: LocalImageProps) => {
   const srcset = image.paths
     .map(({ original, size }) => `${original} ${size}w`)
     .join(",")
+  const webpSrcset = image.paths
+    .map(({ webp, size }) => `${webp} ${size}w`)
+    .join(",")
 
   return (
-    <img
-      src={image.paths.at(-1).original}
-      alt=""
-      decoding={"async"}
-      loading={"lazy"}
-      sizes="100vw"
-      // width={image.width}
-      // height={image.height}
-      srcSet={srcset}
-    />
+    <picture>
+      <source srcSet={webpSrcset} type="image/webp" />
+      <img
+        src={image.paths.at(-1).original}
+        alt=""
+        decoding={"async"}
+        loading={"lazy"}
+        sizes="100vw"
+        // width={image.width}
+        // height={image.height}
+        srcSet={srcset}
+      />
+    </picture>
   )
 }
