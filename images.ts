@@ -39,24 +39,13 @@ const createImageMetaData = () => {
       width,
       height,
       original: path.join("/images/", currentPath),
-      paths: {
-        path: Object.fromEntries(
-          options.deviceSizes.map((deviceSize) => {
-            return [
-              deviceSize,
-              path.join("/images/", dir, `${name}-w${deviceSize}${ext}`),
-            ]
-          })
-        ),
-        webp: Object.fromEntries(
-          options.deviceSizes.map((deviceSize) => {
-            return [
-              deviceSize,
-              path.join("/images/", dir, `${name}-w${deviceSize}${ext}.webp`),
-            ]
-          })
-        ),
-      },
+      paths: options.deviceSizes.map((deviceSize) => {
+        return {
+          size: deviceSize,
+          original: path.join("/images/", dir, `${name}-w${deviceSize}${ext}`),
+          webp: path.join("/images/", dir, `${name}-w${deviceSize}${ext}.webp`),
+        }
+      }),
     }
   })
 
