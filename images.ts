@@ -8,7 +8,9 @@ import sizeOf from "image-size"
 
 const src = "src/images/"
 const dest = "public/images/"
+
 const options = {
+  deviceSizes: [640, 828, 1080, 1200, 1920],
   imageMin: {
     png: {
       quality: 90,
@@ -53,7 +55,7 @@ export type ImagesPath = typeof imagesPath`,
 }
 
 const write = async (currentPath: string) => {
-  const fileName = path.basename(currentPath)
+  const { base: fileName, ext, name } = path.parse(currentPath)
 
   /**
    * srcのpathを割り出してdistのpathを連結する
@@ -70,16 +72,28 @@ const write = async (currentPath: string) => {
 
   const sharpStream = sharp(currentPath)
   const isPngImage = path.extname(fileName) === ".png"
+  const createDeviceSizes = () =>
+    options.deviceSizes.map((deviceSize) =>
+      sharpStream
+        .resize(deviceSize)
+        [isPngImage ? "png" : "jpeg"]({
+          quality: options.imageMin[isPngImage ? "png" : "jpeg"].quality,
+        })
+        .toFile(path.join(destPath, `${name}-w${deviceSize}${ext}`))
+    )
+
+  const createWebpDeviceSizes = () =>
+    options.deviceSizes.map((deviceSize) =>
+      sharpStream
+        .resize(deviceSize)
+        .webp({
+          quality: options.imageMin.webp.quality,
+        })
+        .toFile(path.join(destPath, `${name}-w${deviceSize}${ext}.webp`))
+    )
 
   try {
-    await Promise.all([
-      sharpStream[isPngImage ? "png" : "jpeg"]({
-        quality: options.imageMin[isPngImage ? "png" : "jpeg"].quality,
-      }).toFile(path.join(destPath, fileName)),
-      sharpStream
-        .webp({ quality: options.imageMin.webp.quality })
-        .toFile(path.join(destPath, `${fileName}.webp`)),
-    ])
+    await Promise.all([...createDeviceSizes(), ...createWebpDeviceSizes()])
   } catch (e) {
     console.log(`error! ${currentPath}`)
   }
