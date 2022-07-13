@@ -24,30 +24,81 @@ const options = {
   },
 }
 
+/**
+ * 画像一覧を取得する
+ * [hoge.png, hoge/fuga.png]
+ */
 const getImagePath = () => {
   return glob.sync(`**/*.+(png|jpg)`, {
     cwd: path.resolve(process.cwd(), src),
   })
 }
 
-const createImageMetaData = () => {
-  const imageMapping = getImagePath().map((currentPath) => {
+/**
+ * フロント側でほしいpathを作成する
+ * hoge.png -> /images/hoge.png
+ * huga/hoge.png -> /images/huga/hoge.png
+ */
+const pathJoinImagesDir = (...paths: string[]) => {
+  return path.join("/images/", ...paths)
+}
+
+const createImageFileName = ({
+  name,
+  deviceSize,
+  ext,
+  isWebp = false,
+}: {
+  name: string
+  deviceSize: number
+  ext: string
+  isWebp?: boolean
+}) => {
+  return `${name}-w${deviceSize}${ext}${isWebp ? ".webp" : ""}`
+}
+
+/**
+ * すべての画像を取得してoptions.deviceSizesのsizeにリネームしたJSONを作成する
+ *
+ * @type {
+ *   width: number, // 画像の幅
+ *   height: number, // 画像の高さ
+ *   original: string, // フロントで使う画像のpath(/images/hoge.png)
+ *   paths: {
+ *    deviceSize: number, // フロントで使うデバイスサイズ(options.deviceSizes一つ一つ)
+ *    original: string, // フロントで使う元の画像をdeviceSizeにリネームしたものpath(/images/hoge-w{deviceSizes一つ一つ}.png)
+ *    webp: string, // フロントで使う元の画像をwebpにしdeviceSizeにリネームしたものpath(/images/hoge-w{deviceSizes一つ一つ}.png.webp)
+ *   }[]
+ * }[]
+ */
+const createImageMapping = () => {
+  return getImagePath().map((currentPath) => {
     const { dir, name, ext } = path.parse(currentPath)
     const imagePath = path.join(src, currentPath)
     const { width, height } = sizeOf(imagePath)
     return {
       width,
       height,
-      original: path.join("/images/", currentPath),
+      original: pathJoinImagesDir(currentPath),
       paths: options.deviceSizes.map((deviceSize) => {
         return {
           size: deviceSize,
-          original: path.join("/images/", dir, `${name}-w${deviceSize}${ext}`),
-          webp: path.join("/images/", dir, `${name}-w${deviceSize}${ext}.webp`),
+          original: pathJoinImagesDir(
+            dir,
+            createImageFileName({ name, deviceSize, ext })
+          ),
+          webp: pathJoinImagesDir(
+            dir,
+            createImageFileName({ name, deviceSize, ext, isWebp: true })
+          ),
         }
       }),
     }
   })
+}
+
+const createImageMetaData = () => {
+  const imageMapping = createImageMapping()
 
   fs.writeFile(
     `src/lib/$images.ts`,
@@ -84,7 +135,9 @@ const write = async (currentPath: string) => {
         [isPngImage ? "png" : "jpeg"]({
           quality: options.imageMin[isPngImage ? "png" : "jpeg"].quality,
         })
-        .toFile(path.join(destPath, `${name}-w${deviceSize}${ext}`))
+        .toFile(
+          path.join(destPath, createImageFileName({ name, deviceSize, ext }))
+        )
     )
 
   const createWebpDeviceSizes = () =>
@@ -94,7 +147,12 @@ const write = async (currentPath: string) => {
         .webp({
           quality: options.imageMin.webp.quality,
         })
-        .toFile(path.join(destPath, `${name}-w${deviceSize}${ext}.webp`))
+        .toFile(
+          path.join(
+            destPath,
+            createImageFileName({ name, deviceSize, ext, isWebp: true })
+          )
+        )
     )
 
   try {
