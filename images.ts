@@ -5,6 +5,7 @@ import glob from "glob"
 import fs from "fs"
 import sharp from "sharp"
 import sizeOf from "image-size"
+import dayjs from "dayjs"
 
 const src = "src/images/"
 const dest = "public/images/"
@@ -43,18 +44,22 @@ const pathJoinImagesDir = (...paths: string[]) => {
   return path.join("/images/", ...paths)
 }
 
-const createImageFileName = ({
-  name,
-  deviceSize,
-  ext,
-  isWebp = false,
-}: {
-  name: string
-  deviceSize: number
-  ext: string
-  isWebp?: boolean
-}) => {
-  return `${name}-w${deviceSize}${ext}${isWebp ? ".webp" : ""}`
+const createImageFileName = (
+  {
+    name,
+    deviceSize,
+    ext,
+    isWebp = false,
+  }: {
+    name: string
+    deviceSize: number
+    ext: string
+    isWebp?: boolean
+  },
+  ...params: string[]
+) => {
+  const param = params.length > 0 ? `?${params.join("")}` : ""
+  return `${name}-w${deviceSize}${ext}${isWebp ? ".webp" : ""}${param}`
 }
 
 /**
@@ -75,6 +80,9 @@ const createImageMapping = () => {
   return getImagePath().map((currentPath) => {
     const { dir, name, ext } = path.parse(currentPath)
     const imagePath = path.join(src, currentPath)
+    const stat = fs.statSync(imagePath)
+    const updateTime = dayjs(stat.mtime).format("YYYYMMDDHHmmss")
+    console.log(updateTime)
     const { width, height } = sizeOf(imagePath)
     return {
       width,
@@ -85,11 +93,14 @@ const createImageMapping = () => {
           size: deviceSize,
           original: pathJoinImagesDir(
             dir,
-            createImageFileName({ name, deviceSize, ext })
+            createImageFileName({ name, deviceSize, ext }, updateTime)
           ),
           webp: pathJoinImagesDir(
             dir,
-            createImageFileName({ name, deviceSize, ext, isWebp: true })
+            createImageFileName(
+              { name, deviceSize, ext, isWebp: true },
+              updateTime
+            )
           ),
         }
       }),
