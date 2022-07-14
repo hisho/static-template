@@ -28,6 +28,7 @@
     "last 1 ChromeAndroid versions"
   ],
   "devDependencies": {
+    "@types/glob": "^7.2.0",
     "@types/minimist": "^1.2.2",
     "@types/node": "^18.0.3",
     "@types/prettier": "^2.6.3",
@@ -36,6 +37,7 @@
     "@types/sharp": "^0.30.4",
     "autoprefixer": "^10.4.7",
     "chokidar": "^3.5.3",
+    "dayjs": "^1.11.3",
     "glop": "^0.3.1",
     "image-size": "^1.0.1",
     "minimist": "^1.2.6",
