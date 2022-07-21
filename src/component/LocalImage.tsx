@@ -1,10 +1,12 @@
 import { imagesPath, ImagesPath } from "@src/lib/$images"
+import { ComponentProps } from "react"
 
 type LocalImageProps = Required<{
   readonly src: ImagesPath[number]["original"]
-}>
+}> &
+  Omit<ComponentProps<"img">, "src" | "srcSet" | "sizes">
 
-export const LocalImage = ({ src }: LocalImageProps) => {
+export const LocalImage = ({ src, ...props }: LocalImageProps) => {
   const image = imagesPath.find(({ original }) => original === src)
   if (!image) {
     return <div>Image not found</div>
@@ -29,6 +31,7 @@ export const LocalImage = ({ src }: LocalImageProps) => {
         // width={image.width}
         // height={image.height}
         srcSet={srcset}
+        {...props}
       />
     </picture>
   )
