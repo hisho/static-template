@@ -19,22 +19,22 @@ type NavigateProps = {
  * @example
  * hrefの高階関数を使ってリンクを表示する場合
  * <Navigate href={(path) => path.home.$url()}>
- * hoge
+ * <a>Home</a>
  * </Navigate>
  *
  * hrefの高階関数を使わずに直接pagesPathを渡す場合
  * <Navigate href={pagesPath.home.$url()}>
- * hoge
+ * <a>Home</a>
  * </Navigate>
  *
  * Buttonをaタグにキャストする場合
  * <Navigate href={(path) => path.home.$url()}>
- * hoge
+ * <button>Home</a>
  * </Navigate>
  *
  * Function as Childを使ってstateを使う場合
  * <Navigate href={(path) => path.home.$url()}>
- * {({ isCurrent }) => <>{isCurrent ? '現在のページ' : 'その他'}</>}
+ * {({ isCurrent }) => <a>{isCurrent ? '現在のページ' : 'その他'}</a>}
  * </Navigate>
  */
 export const Navigate = ({ children, href }: NavigateProps) => {
