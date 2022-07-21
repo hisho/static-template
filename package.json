@@ -4,17 +4,18 @@
   "description": "静的サイトテンプレート",
   "private": true,
   "scripts": {
+    "start": "run-s dev",
     "dev": "NODE_ENV=development run-p dev:*",
     "dev:minista": "minista --host --open",
     "dev:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida --watch",
-    "build": "NODE_ENV=production run-s build:path build:minista",
+    "dev:image": "image-optimizer --watch",
+    "build": "NODE_ENV=production run-s build:path build:image build:minista",
     "build:minista": "minista build",
     "build:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida",
-    "serve": "run-s build preview",
+    "build:image": "image-optimizer",
     "preview": "minista preview --host --open",
-    "format": "prettier --check . --write",
-    "watch:image": "ts-node --project tsconfig-node.json images.ts --watch",
-    "build:image": "ts-node --project tsconfig-node.json images.ts"
+    "serve": "run-s build preview",
+    "format": "prettier --check . --write"
   },
   "prettier": {
     "semi": false
@@ -28,19 +29,13 @@
     "last 1 ChromeAndroid versions"
   ],
   "devDependencies": {
-    "@types/glob": "^7.2.0",
+    "@hisho/image-optimizer": "^0.0.2",
     "@types/minimist": "^1.2.2",
     "@types/node": "^18.0.3",
     "@types/prettier": "^2.6.3",
     "@types/react": "^17.0.45",
     "@types/react-dom": "^17.0.16",
-    "@types/sharp": "^0.30.4",
     "autoprefixer": "^10.4.7",
-    "chokidar": "^3.5.3",
-    "dayjs": "^1.11.3",
-    "glop": "^0.3.1",
-    "image-size": "^1.0.1",
-    "minimist": "^1.2.6",
     "minista": "^2.8.2",
     "next": "^12.2.0",
     "npm-run-all": "^4.1.5",
@@ -49,7 +44,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "sass": "^1.53.0",
-    "sharp": "^0.30.7",
     "tailwindcss": "^3.1.4",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4",
