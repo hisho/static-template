@@ -1,0 +1,21 @@
+.root {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.root > *:not(picture) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.root > picture > img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  object-position: center;
+}
