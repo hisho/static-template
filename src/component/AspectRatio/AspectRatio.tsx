@@ -14,6 +14,7 @@ export const AspectRatio = ({
 }: Props) => {
   return (
     <span
+      aria-hidden={true}
       className={cx(styles.root, className)}
       style={{
         aspectRatio: ratio.toString(),

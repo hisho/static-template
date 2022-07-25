@@ -1,6 +1,6 @@
 import { imagesPath, ImagesPath } from "@src/lib/$images"
 import { ComponentProps, CSSProperties, Fragment, useMemo } from "react"
-import { AspectRatio } from "@src/component/AspectRatio/AspectRatio"
+import cx from "classnames"
 
 type LocalImageProps = Required<{
   readonly src: ImagesPath[number]["original"]
@@ -24,7 +24,22 @@ export const LocalImage = ({
   }
 
   const WrapperElement = useMemo(() => {
-    return layout === "responsive" ? AspectRatio : Fragment
+    return layout === "responsive"
+      ? ({
+          ratio,
+          style,
+          ...props
+        }: ComponentProps<"span"> & { ratio: number }) => (
+          <span
+            style={{
+              aspectRatio: ratio.toString(),
+              display: "block",
+              ...style,
+            }}
+            {...props}
+          />
+        )
+      : Fragment
   }, [layout])
 
   const srcset = image.paths
@@ -39,7 +54,13 @@ export const LocalImage = ({
     imagesPath.find(({ original }) => original === mobileSrc) ?? null
   if (mobileImage === null) {
     return (
-      <WrapperElement ratio={image.width / image.height}>
+      <span
+        style={{ display: "block", position: "relative", overflow: "hidden" }}
+      >
+        <WrapperElement
+          ratio={image.width / image.height}
+          className={"hidden md:block"}
+        />
         <picture>
           <source srcSet={webpSrcset} type="image/webp" />
           <img
@@ -55,11 +76,15 @@ export const LocalImage = ({
             style={{
               objectFit,
               objectPosition,
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
               ...style,
             }}
           />
         </picture>
-      </WrapperElement>
+      </span>
     )
   }
 
@@ -71,9 +96,19 @@ export const LocalImage = ({
     .join(",")
 
   return (
-    <WrapperElement ratio={image.width / image.height}>
+    <span
+      style={{ display: "block", position: "relative", overflow: "hidden" }}
+    >
+      <WrapperElement
+        ratio={image.width / image.height}
+        className={"hidden md:block"}
+      />
+      <WrapperElement
+        ratio={mobileImage.width / mobileImage.height}
+        className={"md:hidden"}
+      />
       <picture>
-        <source srcSet={srcset} type="image/webp" media="(min-width: 766px)" />
+        <source srcSet={srcset} type="image/webp" media="(min-width: 768px)" />
         <source srcSet={webpSrcset} media="(min-width: 768px)" />
         <source srcSet={mobileWebpSrcset} type="image/webp" />
         <img
@@ -89,10 +124,14 @@ export const LocalImage = ({
           style={{
             objectFit,
             objectPosition,
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
             ...style,
           }}
         />
       </picture>
-    </WrapperElement>
+    </span>
   )
 }
