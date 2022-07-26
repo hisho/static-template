@@ -33,6 +33,7 @@ export const LocalImage = ({
           <span
             style={{
               aspectRatio: ratio.toString(),
+              width: "100%",
               display: "block",
               ...style,
             }}
@@ -55,12 +56,14 @@ export const LocalImage = ({
   if (mobileImage === null) {
     return (
       <span
-        style={{ display: "block", position: "relative", overflow: "hidden" }}
+        style={{
+          width: "100%",
+          display: "block",
+          position: "relative",
+          overflow: "hidden",
+        }}
       >
-        <WrapperElement
-          ratio={image.width / image.height}
-          className={"hidden md:block"}
-        />
+        <WrapperElement ratio={image.width / image.height} />
         <picture>
           <source srcSet={webpSrcset} type="image/webp" />
           <img
@@ -80,6 +83,7 @@ export const LocalImage = ({
               left: "50%",
               top: "50%",
               transform: "translate(-50%, -50%)",
+              width: "100%",
               ...style,
             }}
           />
@@ -97,7 +101,12 @@ export const LocalImage = ({
 
   return (
     <span
-      style={{ display: "block", position: "relative", overflow: "hidden" }}
+      style={{
+        width: "100%",
+        display: "block",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
       <WrapperElement
         ratio={image.width / image.height}
@@ -128,6 +137,7 @@ export const LocalImage = ({
             left: "50%",
             top: "50%",
             transform: "translate(-50%, -50%)",
+            width: "100%",
             ...style,
           }}
         />
